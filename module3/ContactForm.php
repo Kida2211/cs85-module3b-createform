@@ -8,10 +8,13 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
   $topic = $_POST["topic"];
   $message = $_POST["message"];
 
-  echo "<p>Thank you, $fullName!</p>";
-  echo "<p>We received your message about: \"$topic\"</p>";
-  echo "<p>We'll get back to you at $email.</p>";
-  exit;
+  if (empty($fullName)) $errors[] = "Full name is required.";
+  if (!filter_var($email, FILTER_VALIDATE_EMAIL)) $errors[] = "Valid email is required.";
+  if (empty($topic)) $errors[] = "Topic is required.";
+  if (str_word_count($message) < 50 || str_word_count($message) > 150)
+    $errors[] = "Message must be between 50 and 150 words.";
+
+  if (empty($errors)) $submitted = true;
 }
 ?>
 
